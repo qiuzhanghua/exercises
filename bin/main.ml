@@ -185,6 +185,78 @@ let duplicate lst =
     | [] -> acc
     | hd :: tl -> aux (hd :: hd :: acc) tl
   in
-  aux [] lst
+  List.rev (aux [] lst)
 
-let () = assert (duplicate [] = [])
+let () = assert (duplicate [ "a"; "b" ] = [ "a"; "a"; "b"; "b" ])
+
+let replicate lst n =
+  let rec many n acc x = if n = 0 then acc else many (n - 1) (x :: acc) x in
+  let rec aux acc = function [] -> acc | hd :: tl -> aux (many n acc hd) tl in
+  List.rev (aux [] lst)
+
+let () = assert (replicate [ "a"; "b" ] 3 = [ "a"; "a"; "a"; "b"; "b"; "b" ])
+
+let drop lst n =
+  let rec aux acc count = function
+    | [] -> acc
+    | hd :: tl ->
+        if count = 1 then aux acc n tl else aux (hd :: acc) (count - 1) tl
+  in
+  List.rev (aux [] n lst)
+
+let () =
+  assert (
+    drop [ "a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"; "i"; "j" ] 3
+    = [ "a"; "b"; "d"; "e"; "g"; "h"; "j" ])
+
+let split lst n =
+  let rec aux acc count = function
+    | [] -> (List.rev acc, [])
+    | h :: t ->
+        if count = 0 then (List.rev acc, h :: t)
+        else aux (h :: acc) (count - 1) t
+  in
+  aux [] n lst
+
+let () =
+  assert (
+    split [ "a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"; "i"; "j" ] 3
+    = ([ "a"; "b"; "c" ], [ "d"; "e"; "f"; "g"; "h"; "i"; "j" ]))
+
+let slice lst i k =
+  let rec aux acc i' k' = function
+    | [] -> acc
+    | h :: t ->
+        if i' = 0 then if k' = 0 then h :: acc else aux (h :: acc) 0 (k' - 1) t
+        else aux acc (i' - 1) (k' - 1) t
+  in
+  List.rev (aux [] i k lst)
+
+let () =
+  assert (
+    slice [ "a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"; "i"; "j" ] 2 6
+    = [ "c"; "d"; "e"; "f"; "g" ])
+
+let rotate lst n =
+  let rec aux acc count = function
+    | [] -> acc
+    | h :: t ->
+        if count = 0 then (h :: t) @ List.rev acc
+        else aux (h :: acc) (count - 1) t
+  in
+  aux [] n lst
+
+let () =
+  assert (
+    rotate [ "a"; "b"; "c"; "d"; "e"; "f"; "g"; "h" ] 3
+    = [ "d"; "e"; "f"; "g"; "h"; "a"; "b"; "c" ])
+
+let remove_at n lst =
+  let rec aux acc count = function
+    | [] -> acc
+    | h :: t ->
+        if count = 0 then List.rev acc @ t else aux (h :: acc) (count - 1) t
+  in
+  aux [] n lst
+
+let () = assert (remove_at 1 [ "a"; "b"; "c"; "d" ] = [ "a"; "c"; "d" ])
