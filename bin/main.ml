@@ -273,3 +273,11 @@ let insert_at x n lst =
 let () =
   assert (
     insert_at "alfa" 1 [ "a"; "b"; "c"; "d" ] = [ "a"; "alfa"; "b"; "c"; "d" ])
+
+let range a b =
+  let rec aux acc a' b' =
+    if a' = b' then b' :: acc else aux (b' :: acc) a' (b' - 1)
+  in
+  aux [] a b
+
+let () = assert (range 4 9 = [ 4; 5; 6; 7; 8; 9 ])
