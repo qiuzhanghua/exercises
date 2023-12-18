@@ -134,3 +134,48 @@ let () =
         One "d";
         Many (3, "e");
       ])
+
+let decode lst =
+  let rec many acc n x = if n = 0 then acc else many (x :: acc) (n - 1) x in
+  let rec aux acc = function
+    | [] -> acc
+    | One x :: tl -> aux (x :: acc) tl
+    | Many (n, x) :: tl -> aux (many acc n x) tl
+  in
+  List.rev (aux [] lst)
+
+let () =
+  assert (
+    decode
+      [
+        Many (4, "a");
+        One "b";
+        Many (2, "c");
+        Many (2, "a");
+        One "d";
+        Many (3, "e");
+      ]
+    = [ "a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e" ])
+
+let encode3 lst =
+  let rle count x = if count = 1 then One x else Many (count, x) in
+  let rec aux count acc = function
+    | [] -> []
+    | [ x ] -> rle (count + 1) x :: acc
+    | a :: (b :: _ as t) ->
+        if a = b then aux (count + 1) acc t
+        else aux 0 (rle (count + 1) a :: acc) t
+  in
+  List.rev (aux 0 [] lst)
+
+let () =
+  assert (
+    encode3 [ "a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e" ]
+    = [
+        Many (4, "a");
+        One "b";
+        Many (2, "c");
+        Many (2, "a");
+        One "d";
+        Many (3, "e");
+      ])
