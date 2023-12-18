@@ -260,3 +260,16 @@ let remove_at n lst =
   aux [] n lst
 
 let () = assert (remove_at 1 [ "a"; "b"; "c"; "d" ] = [ "a"; "c"; "d" ])
+
+let insert_at x n lst =
+  let rec aux acc count = function
+    | [] -> acc
+    | h :: t ->
+        if count = 0 then List.rev acc @ (x :: h :: t)
+        else aux (h :: acc) (count - 1) t
+  in
+  aux [] n lst
+
+let () =
+  assert (
+    insert_at "alfa" 1 [ "a"; "b"; "c"; "d" ] = [ "a"; "alfa"; "b"; "c"; "d" ])
