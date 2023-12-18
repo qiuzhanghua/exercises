@@ -179,3 +179,12 @@ let () =
         One "d";
         Many (3, "e");
       ])
+
+let duplicate lst =
+  let rec aux acc = function
+    | [] -> acc
+    | hd :: tl -> aux (hd :: hd :: acc) tl
+  in
+  aux [] lst
+
+let () = assert (duplicate [] = [])
