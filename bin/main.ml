@@ -281,3 +281,28 @@ let range a b =
   aux [] a b
 
 let () = assert (range 4 9 = [ 4; 5; 6; 7; 8; 9 ])
+
+let rand_select n lst =
+  Random.self_init ();
+  let rec extract_at k acc = function
+    | [] -> (None, [])
+    | hd :: tl ->
+        if k = 0 then (Some hd, acc @ tl) else extract_at (k - 1) (hd :: acc) tl
+  in
+  let len = List.length lst in
+  let rec aux acc n lst len =
+    (* Printf.printf "list: %s\n" (String.concat ";" lst); *)
+    if n = 0 || len <= 0 then acc
+    else
+      let picked, rest = extract_at (Random.int len) [] lst in
+      (* Printf.printf "pick: %s\n" (match picked with None -> "None" | Some x -> x);
+         Printf.printf "rest: %s\n" (String.concat ";" rest); *)
+      match picked with
+      | None -> acc
+      | Some x -> aux (x :: acc) (n - 1) rest (len - 1)
+  in
+  aux [] n lst len
+
+let () =
+  Printf.printf "%s\n"
+    (String.concat ";" (rand_select 8 [ "a"; "b"; "c"; "d"; "e"; "f"; "g" ]))
