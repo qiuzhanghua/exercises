@@ -408,3 +408,31 @@ let gcd a b =
   aux (abs a) (abs b)
 
 let () = assert (gcd 65 26 = 13)
+let coprime a b = gcd a b = 1
+
+let () =
+  assert (coprime 13 27);
+  assert (not (coprime 20536 7826))
+
+let factors n =
+  let rec aux d n =
+    if n = 1 then []
+    else if n mod d = 0 then d :: aux d (n / d)
+    else aux (d + 1) n
+  in
+  aux 2 n
+
+let () = assert (factors 315 = [ 3; 3; 5; 7 ])
+
+let factors2 n =
+  let rec aux d n =
+    if n = 1 then []
+    else if n mod d = 0 then
+      match aux d (n / d) with
+      | (h, c) :: t when h = d -> (h, c + 1) :: t
+      | l -> (d, 1) :: l
+    else aux (d + 1) n
+  in
+  aux 2 n
+
+let () = assert (factors2 315 = [ (3, 2); (5, 1); (7, 1) ])
