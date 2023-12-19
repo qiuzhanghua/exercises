@@ -436,3 +436,23 @@ let factors2 n =
   aux 2 n
 
 let () = assert (factors2 315 = [ (3, 2); (5, 1); (7, 1) ])
+
+let phi n =
+  let rec aux acc d =
+    if d < n then aux (if coprime n d then acc + 1 else acc) (d + 1) else acc
+  in
+  if n = 1 then 1 else aux 0 1
+
+let () = assert (phi 10 = 4)
+let rec power x n = if n = 0 then 1 else x * power x (n - 1)
+
+let phi_imporved n =
+  let rec aux acc = function
+    | [] -> acc
+    | (p, m) :: t -> aux ((p - 1) * power p (m - 1) * acc) t
+  in
+  aux 1 (factors2 n)
+
+let () =
+  assert (phi_imporved 10 = 4);
+  assert (phi_imporved 13 = 12)
