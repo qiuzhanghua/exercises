@@ -316,21 +316,23 @@ let () =
 let permutation lst =
   Random.self_init ();
   let rec select_at k acc = function
-    | [] -> (acc, [])
+    | [] -> raise Not_found
     | hd :: tl ->
-        if k = 0 then (hd :: acc, tl) else select_at (k - 1) acc (tl @ [hd])
+        if k = 0 then (hd, acc @ tl) else select_at (k - 1) (hd :: acc) tl
   in
-    let len = List.length lst in
-    let rec aux k acc = function
-    | [] -> acc
-    | hd :: tl ->
-        let m = Random.int k in
-        let answer, rest = select_at m acc (hd :: tl)
-        in
-        aux (k - 1) answer rest
-    in
-    aux len [] lst
-
+  let select_rand k lst =
+        select_at k [] lst
+      in
+  let len = List.length lst in
+  let rec aux k acc lst =
+    if k = 0 then acc
+    else
+      let m = Random.int k in
+      let answer, rest = select_rand m lst in
+      aux (k - 1) (answer :: acc) rest
+  in
+  aux len [] lst
 
 let () =
-    Printf.printf "%s\n" (String.concat ";" (permutation ["a"; "b"; "c"; "d"; "e"; "f"]))
+  Printf.printf "%s\n"
+    (String.concat ";" (permutation [ "a"; "b"; "c"; "d"; "e"; "f" ]))
