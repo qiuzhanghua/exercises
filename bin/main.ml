@@ -334,3 +334,21 @@ let permutation lst =
 let () =
   Printf.printf "%s\n"
     (String.concat ";" (permutation [ "a"; "b"; "c"; "d"; "e"; "f" ]))
+
+let extract k lst =
+  let rec aux acc k lst =
+    if k <= 0 then [ acc ]
+    else
+      match lst with
+      | [] -> []
+      | hd :: tl ->
+          let with_hd = aux (hd :: acc) (k - 1) tl in
+          let without_hd = aux acc k tl in
+          with_hd @ without_hd
+  in
+  aux [] k lst
+
+let () =
+  Printf.printf "%s\n"
+    (String.concat ";"
+       (List.map (String.concat "") (extract 3 [ "a"; "b"; "c"; "d"; "e" ])))
