@@ -404,9 +404,7 @@ let () = assert (not (is_prime 1))
 let () = assert (is_prime 7)
 
 let gcd a b =
-  let rec aux a b =
-    if b = 0 then a else aux b (a mod b)
-  in
+  let rec aux a b = if b = 0 then a else aux b (a mod b) in
   aux (abs a) (abs b)
 
 let () = assert (gcd 65 26 = 13)
