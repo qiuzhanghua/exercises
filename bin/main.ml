@@ -312,3 +312,25 @@ let lotto_select k m = rand_select k (range 1 m)
 let () =
   Printf.printf "%s\n"
     (String.concat ";" (List.map string_of_int (lotto_select 6 50)))
+
+let permutation lst =
+  Random.self_init ();
+  let rec select_at k acc = function
+    | [] -> (acc, [])
+    | hd :: tl ->
+        if k = 0 then (hd :: acc, tl) else select_at (k - 1) acc (tl @ [hd])
+  in
+    let len = List.length lst in
+    let rec aux k acc = function
+    | [] -> acc
+    | hd :: tl ->
+        let m = Random.int k in
+        let answer, rest = select_at m acc (hd :: tl)
+        in
+        aux (k - 1) answer rest
+    in
+    aux len [] lst
+
+
+let () =
+    Printf.printf "%s\n" (String.concat ";" (permutation ["a"; "b"; "c"; "d"; "e"; "f"]))
