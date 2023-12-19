@@ -1,6 +1,7 @@
 (*
 https://ocaml.org/exercises
    *)
+
 let rec last lst =
   match lst with [] -> None | [ x ] -> Some x | _ :: tl -> last tl
 
@@ -456,3 +457,14 @@ let phi_imporved n =
 let () =
   assert (phi_imporved 10 = 4);
   assert (phi_imporved 13 = 12)
+
+
+let timeit f a = 
+  let t = Unix.gettimeofday () in
+  let _ = f a in
+  let t' = Unix.gettimeofday () in
+  t' -. t
+
+let () = 
+  Printf.printf "phi 10090: %f\n" (timeit phi 10090 );
+  Printf.printf "phi_imporved 10090: %f\n" (timeit phi_imporved 10090)
