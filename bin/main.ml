@@ -352,3 +352,44 @@ let () =
   Printf.printf "%s\n"
     (String.concat ";"
        (List.map (String.concat "") (extract 3 [ "a"; "b"; "c"; "d"; "e" ])))
+
+let length_sort lst =
+  List.sort (fun a b -> compare (List.length a) (List.length b)) lst
+
+let feq_sort lst =
+  List.sort
+    (fun a b ->
+      compare
+        (List.length (List.filter (fun x -> x = a) lst))
+        (List.length (List.filter (fun x -> x = b) lst)))
+    lst
+
+let () =
+  Printf.printf "%s\n"
+    (String.concat ";"
+       (List.map (String.concat "")
+          (length_sort
+             [
+               [ "a"; "b"; "c" ];
+               [ "d"; "e" ];
+               [ "f"; "g"; "h" ];
+               [ "d"; "e" ];
+               [ "i"; "j"; "k"; "l" ];
+               [ "m"; "n" ];
+               [ "o" ];
+             ])));
+  Printf.printf "%s\n"
+    (String.concat ";"
+       (List.map (String.concat "")
+          (feq_sort
+             [
+               [ "a"; "b"; "c" ];
+               [ "d"; "e" ];
+               [ "f"; "g"; "h" ];
+               [ "d"; "e" ];
+               [ "i"; "j"; "k"; "l" ];
+               [ "m"; "n" ];
+               [ "o" ];
+               [ "a"; "b"; "c" ];
+               [ "a"; "b"; "c" ];
+             ])))
