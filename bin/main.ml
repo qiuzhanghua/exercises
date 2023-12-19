@@ -307,7 +307,8 @@ let () =
   Printf.printf "%s\n"
     (String.concat ";" (rand_select 8 [ "a"; "b"; "c"; "d"; "e"; "f"; "g" ]))
 
-let lotto_select k m =
-rand_select k (range 1 m)
+let lotto_select k m = rand_select k (range 1 m)
 
-let () = Printf.printf "%s\n" (String.concat ";" (List.map string_of_int (lotto_select 6 50) ))
+let () =
+  Printf.printf "%s\n"
+    (String.concat ";" (List.map string_of_int (lotto_select 6 50)))
