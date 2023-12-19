@@ -320,9 +320,7 @@ let permutation lst =
     | hd :: tl ->
         if k = 0 then (hd, acc @ tl) else select_at (k - 1) (hd :: acc) tl
   in
-  let select_rand k lst =
-        select_at k [] lst
-      in
+  let select_rand k lst = select_at k [] lst in
   let len = List.length lst in
   let rec aux k acc lst =
     if k = 0 then acc
