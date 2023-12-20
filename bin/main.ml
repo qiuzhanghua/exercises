@@ -491,3 +491,31 @@ let goldbach n =
 let () =
   let x, y = goldbach 28 in
   Printf.printf "%d + %d = %d\n" x y 28
+
+let goldbach_list a b =
+  let acc = ref [] in
+  let x = if a mod 2 = 0 then a else a + 1 in
+  let i = ref x in
+  while !i < b do
+    acc := (!i, goldbach !i) :: !acc;
+    i := !i + 2
+  done;
+  List.rev !acc
+
+let rec goldbach_list2 a b =
+  if a > b then []
+  else if a mod 2 <> 0 then goldbach_list2 (a + 1) b
+  else (a, goldbach a) :: goldbach_list2 (a + 2) b
+
+let () =
+  Printf.printf "%s\n"
+    (String.concat ";\n"
+       (List.map
+          (fun (a, (b, c)) -> Printf.sprintf "%d = %d + %d" a b c)
+          (goldbach_list 9 20)));
+
+  Printf.printf "%s\n"
+    (String.concat ";\n"
+       (List.map
+          (fun (a, (b, c)) -> Printf.sprintf "%d = %d + %d" a b c)
+          (goldbach_list2 4 20)))
