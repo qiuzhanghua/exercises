@@ -481,3 +481,13 @@ let all_primes a b =
 let () =
   Printf.printf "%s\n"
     (String.concat ";" (List.map string_of_int (all_primes 10 20)))
+
+let goldbach n =
+  let rec aux k =
+    if is_prime k && is_prime (n - k) then (k, n - k) else aux (k + 1)
+  in
+  aux 2
+
+let () =
+  let x, y = goldbach 28 in
+  Printf.printf "%d + %d = %d\n" x y 28
