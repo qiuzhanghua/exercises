@@ -648,3 +648,24 @@ let construct l = List.fold_left insert Empty l
 let () =
   Printf.printf "%b\n" (is_symmetric (construct [ 5; 3; 18; 1; 4; 12; 21 ]));
   Printf.printf "%b\n" (is_symmetric (construct [ 3; 2; 5; 7; 4 ]))
+
+let rec count_leaves = function
+  | Empty -> 0
+  | Node (_, Empty, Empty) -> 1
+  | Node (_, l, r) -> count_leaves l + count_leaves r
+
+let () =
+  Printf.printf "%d\n" (count_leaves (construct [ 5; 3; 18; 1; 4; 12; 21 ]))
+
+let leaves tree =
+  let rec aux acc = function
+    | Empty -> acc
+    | Node (x, Empty, Empty) -> x :: acc
+    | Node (_, l, r) -> aux (aux acc l) r
+  in
+  aux [] tree
+
+let () =
+  Printf.printf "%s\n"
+    (String.concat ","
+       (List.map string_of_int (leaves (construct [ 5; 3; 18; 1; 4; 12; 21 ]))))
