@@ -519,3 +519,33 @@ let () =
        (List.map
           (fun (a, (b, c)) -> Printf.sprintf "%d = %d + %d" a b c)
           (goldbach_list2 4 20)))
+
+type bool_expr =
+  | Var of string
+  | Not of bool_expr
+  | And of bool_expr * bool_expr
+  | Or of bool_expr * bool_expr
+
+let rec eval2 a val_a b val_b = function
+  | Var x -> if x = a then val_a else if x = b then val_b else failwith "error"
+  | Not x -> not (eval2 a val_a b val_b x)
+  | And (x, y) -> eval2 a val_a b val_b x && eval2 a val_a b val_b y
+  | Or (x, y) -> eval2 a val_a b val_b x || eval2 a val_a b val_b y
+
+let table2 a b expr =
+  [
+    (true, true, eval2 a true b true expr);
+    (true, false, eval2 a true b false expr);
+    (false, true, eval2 a false b true expr);
+    (false, false, eval2 a false b false expr);
+  ]
+
+let () =
+  assert (
+    table2 "a" "b" (Not (And (Var "a", Or (Var "a", Var "b"))))
+    = [
+        (true, true, false);
+        (true, false, false);
+        (false, true, true);
+        (false, false, true);
+      ])
