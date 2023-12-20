@@ -625,3 +625,12 @@ let () =
   in
   assert (cbal_tree 4 = tree);
   Printf.printf "%s\n" (binary_tree_to_string (List.hd tree))
+
+let rec is_mirror t1 t2 =
+  match (t1, t2) with
+  | Empty, Empty -> true
+  | Node (_, l1, r1), Node (_, l2, r2) -> is_mirror l1 r2 && is_mirror l2 r1
+  | _ -> false
+
+let is_symmetric = function Empty -> true | Node (_, l, r) -> is_mirror l r
+let () = Printf.printf "%b\n" (is_symmetric (List.hd (cbal_tree 7)))
