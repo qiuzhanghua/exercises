@@ -561,3 +561,67 @@ let gray n =
   aux 1 [ "0"; "1" ]
 
 let () = Printf.printf "%s\n" (String.concat ";" (gray 3))
+
+type 'a binary_tree = Empty | Node of 'a * 'a binary_tree * 'a binary_tree
+
+let add_trees_with left right all =
+  let add_right_tree all l =
+    List.fold_left (fun a r -> Node ("x", l, r) :: a) all right
+  in
+  List.fold_left add_right_tree all left
+
+(* let rec cbal_tree = function
+   | 0 -> [ Empty ]
+   | n ->
+       let q, r = ((n - 1) / 2, (n - 1) mod 2) in
+       let left = cbal_tree (q + r) in
+       let right = cbal_tree q in
+       add_trees_with left right [] *)
+
+let rec cbal_tree n =
+  if n = 0 then [ Empty ]
+  else if n mod 2 = 1 then
+    let t = cbal_tree (n / 2) in
+    add_trees_with t t []
+  else
+    (* n even: n-1 nodes for the left & right subtrees altogether. *)
+    let t1 = cbal_tree ((n / 2) - 1) in
+    let t2 = cbal_tree (n / 2) in
+    add_trees_with t1 t2 (add_trees_with t2 t1 [])
+
+(* let binary_tree_to_string tree =
+   let rec aux acc = function
+     | Empty -> "Empty" :: acc
+     | Node (x, l, r) -> aux (x :: aux acc r) l
+   in
+   String.concat ";" (aux [] tree) *)
+
+let rec binary_tree_to_string = function
+  | Empty -> "e"
+  | Node (x, Empty, Empty) -> x
+  | Node (x, l, r) ->
+      x ^ "(" ^ binary_tree_to_string l ^ "," ^ binary_tree_to_string r ^ ")"
+
+let () =
+  let tree =
+    [
+      Node
+        ( "x",
+          Node ("x", Empty, Empty),
+          Node ("x", Node ("x", Empty, Empty), Empty) );
+      Node
+        ( "x",
+          Node ("x", Empty, Empty),
+          Node ("x", Empty, Node ("x", Empty, Empty)) );
+      Node
+        ( "x",
+          Node ("x", Node ("x", Empty, Empty), Empty),
+          Node ("x", Empty, Empty) );
+      Node
+        ( "x",
+          Node ("x", Empty, Node ("x", Empty, Empty)),
+          Node ("x", Empty, Empty) );
+    ]
+  in
+  assert (cbal_tree 4 = tree);
+  Printf.printf "%s\n" (binary_tree_to_string (List.hd tree))
