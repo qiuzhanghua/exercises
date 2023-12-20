@@ -634,3 +634,17 @@ let rec is_mirror t1 t2 =
 
 let is_symmetric = function Empty -> true | Node (_, l, r) -> is_mirror l r
 let () = Printf.printf "%b\n" (is_symmetric (List.hd (cbal_tree 7)))
+
+let rec insert tree x =
+  match tree with
+  | Empty -> Node (x, Empty, Empty)
+  | Node (y, l, r) ->
+      if x = y then tree
+      else if x < y then Node (y, insert l x, r)
+      else Node (y, l, insert r x)
+
+let construct l = List.fold_left insert Empty l
+
+let () =
+  Printf.printf "%b\n" (is_symmetric (construct [ 5; 3; 18; 1; 4; 12; 21 ]));
+  Printf.printf "%b\n" (is_symmetric (construct [ 3; 2; 5; 7; 4 ]))
