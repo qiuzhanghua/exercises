@@ -458,13 +458,26 @@ let () =
   assert (phi_imporved 10 = 4);
   assert (phi_imporved 13 = 12)
 
-
-let timeit f a = 
+let timeit f a =
   let t = Unix.gettimeofday () in
   let _ = f a in
   let t' = Unix.gettimeofday () in
   t' -. t
 
-let () = 
-  Printf.printf "phi 10090: %f\n" (timeit phi 10090 );
+let () =
+  Printf.printf "phi 10090: %f\n" (timeit phi 10090);
   Printf.printf "phi_imporved 10090: %f\n" (timeit phi_imporved 10090)
+
+let all_primes a b =
+  let acc = ref [ 2 ] in
+  let is_prime acc n = List.for_all (fun x -> n mod x <> 0) acc in
+  (let i = ref 3 in
+   while !i <= b do
+     if is_prime !acc !i then acc := !i :: !acc;
+     i := !i + 2
+   done);
+  List.rev (List.filter (fun x -> x >= a) !acc)
+
+let () =
+  Printf.printf "%s\n"
+    (String.concat ";" (List.map string_of_int (all_primes 10 20)))
